@@ -1,3 +1,4 @@
+import types
 import torch
 import torch.nn as nn
 import pytorch_fft.fft.autograd as afft
@@ -88,8 +89,21 @@ class CountSketch(nn.Module):
         if s is None:
             s = 2 * torch.Tensor(input_size).random_(0,2) - 1
 
-        self.register_buffer('h',Variable(h))
-        self.register_buffer('s',Variable(s))
+        h = Variable(h)
+        s = Variable(s)
+
+        # The Variable h being a list of indices,
+        # If the type of this module is changed (e.g. float to double),
+        # the variable h should remain a LongTensor
+        # therefore we force float() and double() to be no-ops on the variable h.
+        def identity(self):
+            return self
+
+        h.float = types.MethodType(identity,h)
+        h.double = types.MethodType(identity,h)
+
+        self.register_buffer('h',h)
+        self.register_buffer('s',s)
 
     def forward(self, x):
         x_size = list(x.size())
