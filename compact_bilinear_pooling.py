@@ -89,9 +89,6 @@ class CountSketch(nn.Module):
         if s is None:
             s = 2 * torch.Tensor(input_size).random_(0,2) - 1
 
-        h = Variable(h)
-        s = Variable(s)
-
         # The Variable h being a list of indices,
         # If the type of this module is changed (e.g. float to double),
         # the variable h should remain a LongTensor
@@ -110,7 +107,7 @@ class CountSketch(nn.Module):
 
         assert(x_size[-1] == self.input_size)
 
-        return CountSketchFn.apply(self.h, self.s, self.output_size, x)
+        return CountSketchFn.apply(Variable(self.h), Variable(self.s), self.output_size, x)
 
 def ComplexMultiply_forward(X_re, X_im, Y_re, Y_im):
     Z_re = torch.addcmul(X_re*Y_re, -1, X_im, Y_im)
@@ -249,6 +246,9 @@ class CompactBilinearPooling(nn.Module):
         self.ifft = afft.Irfft()
         self.output_size = output_size
 
-    def forward(self, x, y):
-        return CompactBilinearPoolingFn.apply(self.sketch1.h, self.sketch1.s, self.sketch2.h, self.sketch2.s, self.output_size, x, y)
+    def forward(self, x, y = None):
+        if y is None:
+            y = x
+
+        return CompactBilinearPoolingFn.apply(Variable(self.sketch1.h), Variable(self.sketch1.s), Variable(self.sketch2.h), Variable(self.sketch2.s), self.output_size, x, y)
 
