@@ -63,7 +63,7 @@ class TestCompactBilinearPooling(unittest.TestCase):
         np.testing.assert_almost_equal(ratio, np.ones_like(ratio), decimal=1)
         
     def test_gradients(self):
-        cbp = CompactBilinearPooling(128, 128, 160).cuda()
+        cbp = CompactBilinearPooling(128, 128, 160, force_cpu_scatter_add=True).cuda()
         x = torch.autograd.Variable(torch.rand(4,128).cuda(), requires_grad=True)
         y = torch.autograd.Variable(torch.rand(4,128).cuda(), requires_grad=True)
         self.assertTrue(torch.autograd.gradcheck(cbp, (x,y), eps=1))
@@ -98,7 +98,7 @@ class TestCompactBilinearDoublePooling(unittest.TestCase):
         np.testing.assert_almost_equal(ratio, np.ones_like(ratio), decimal=1)
 
     def test_gradients(self):
-        cbp = CompactBilinearPooling(128, 128, 160).double().cuda()
+        cbp = CompactBilinearPooling(128, 128, 160, force_cpu_scatter_add=True).double().cuda()
         x = torch.autograd.Variable(torch.rand(4,128).double().cuda(), requires_grad=True)
         y = torch.autograd.Variable(torch.rand(4,128).double().cuda(), requires_grad=True)
         self.assertTrue(torch.autograd.gradcheck(cbp, (x,y), eps=1))
