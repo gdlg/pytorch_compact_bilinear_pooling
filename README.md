@@ -2,7 +2,7 @@
 
 This repository has a pure Python implementation of Compact Bilinear Pooling and Count Sketch for PyTorch.
 
-It depends on the FFT implementation of [pytorch_fft](https://github.com/locuslab/pytorch_fft). Note that it relies on the latest changes to the master branch of pytorch_fft which are not yet available in the pypi version.
+It depends on the FFT implementation of [pytorch_fft](https://github.com/locuslab/pytorch_fft). pytorch_fft can be installed either from source or from Pypi using `pip install pytorch_fft`.
 
 ## Usage
 
