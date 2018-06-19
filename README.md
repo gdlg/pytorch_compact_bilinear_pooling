@@ -2,7 +2,7 @@
 
 This repository has a pure Python implementation of Compact Bilinear Pooling and Count Sketch for PyTorch.
 
-This version relies of the FFT implementation provided with PyTorch 0.4.0 onward. For older versions of PyTorch, use the tag [v0.3.0](https://github.com/gdlg/pytorch_compact_bilinear_pooling/releases/tag/v0.3.0).
+This version relies on the FFT implementation provided with PyTorch 0.4.0 onward. For older versions of PyTorch, use the tag [v0.3.0](https://github.com/gdlg/pytorch_compact_bilinear_pooling/releases/tag/v0.3.0).
 
 ## Usage
 
