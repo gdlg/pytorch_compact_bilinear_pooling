@@ -2,7 +2,7 @@
 
 This repository has a pure Python implementation of Compact Bilinear Pooling and Count Sketch for PyTorch.
 
-It depends on the FFT implementation of [pytorch_fft](https://github.com/locuslab/pytorch_fft). pytorch_fft can be installed either from source or from Pypi using `pip install pytorch_fft`.
+This version relies of the FFT implementation provided with PyTorch 0.4.0 onward. For older versions of PyTorch, use the tag [v0.3.0](https://github.com/gdlg/pytorch_compact_bilinear_pooling/releases/tag/v0.3.0).
 
 ## Usage
 
@@ -16,8 +16,8 @@ from compact_bilinear_pooling import CountSketch, CompactBilinearPooling
 input_size = 2048
 output_size = 16000
 mcb = CompactBilinearPooling(input_size, input_size, output_size).cuda()
-x = torch.autograd.Variable(torch.rand(4,input_size).cuda())
-y = torch.autograd.Variable(torch.rand(4,input_size).cuda())
+x = torch.rand(4,input_size).cuda()
+y = torch.rand(4,input_size).cuda()
 
 z = mcb(x,y)
 ```

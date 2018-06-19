@@ -27,33 +27,33 @@ def bilinear_pooling(x,y):
 
 class TestComplexMultiply(unittest.TestCase):
     def test_gradients(self):
-        x = (torch.autograd.Variable(torch.rand(4,128).cuda(), requires_grad=True),
-             torch.autograd.Variable(torch.rand(4,128).cuda(), requires_grad=True))
-        y = (torch.autograd.Variable(torch.rand(4,128).cuda(), requires_grad=True),
-             torch.autograd.Variable(torch.rand(4,128).cuda(), requires_grad=True))
+        x = (torch.rand(4,128).requires_grad_(),
+             torch.rand(4,128).requires_grad_())
+        y = (torch.rand(4,128).requires_grad_(),
+             torch.rand(4,128).requires_grad_())
         self.assertTrue(torch.autograd.gradcheck(ComplexMultiply.apply, x+y, eps=1))
 
 class TestCompactBilinearPooling(unittest.TestCase):
     def test_pooling(self):
-        mcb = CompactBilinearPooling(2048, 2048, 16000).cuda()
+        mcb = CompactBilinearPooling(2048, 2048, 16000)
 
         # Create 4 arrays of positive reals
-        x = torch.autograd.Variable(torch.rand(4,2048).cuda(), requires_grad=True)
-        y = torch.autograd.Variable(torch.rand(4,2048).cuda(), requires_grad=True)
-        z = torch.autograd.Variable(torch.rand(4,2048).cuda(), requires_grad=True)
-        w = torch.autograd.Variable(torch.rand(4,2048).cuda(), requires_grad=True)
+        x = torch.rand(4,2048)
+        y = torch.rand(4,2048)
+        z = torch.rand(4,2048)
+        w = torch.rand(4,2048)
         
         # Compute the real bilinear pooling for each pair of array
-        bp_xy = bilinear_pooling(x,y).data.cpu().numpy()
-        bp_zw = bilinear_pooling(z,w).data.cpu().numpy()
+        bp_xy = bilinear_pooling(x,y).cpu().numpy()
+        bp_zw = bilinear_pooling(z,w).cpu().numpy()
         
         # Compute the dot product of the result
         kernel_bp = np.sum(bp_xy*bp_zw, axis=1)
         
 
         # Repeat the computation with compact bilinear pooling
-        cbp_xy = mcb(x,y).data.cpu().numpy()
-        cbp_zw = mcb(z,w).data.cpu().numpy()
+        cbp_xy = mcb(x,y).cpu().numpy()
+        cbp_zw = mcb(z,w).cpu().numpy()
         
         kernel_cbp = np.sum(cbp_xy*cbp_zw, axis=1)
 
@@ -63,32 +63,32 @@ class TestCompactBilinearPooling(unittest.TestCase):
         np.testing.assert_almost_equal(ratio, np.ones_like(ratio), decimal=1)
         
     def test_gradients(self):
-        cbp = CompactBilinearPooling(128, 128, 160, force_cpu_scatter_add=True).cuda()
-        x = torch.autograd.Variable(torch.rand(4,128).cuda(), requires_grad=True)
-        y = torch.autograd.Variable(torch.rand(4,128).cuda(), requires_grad=True)
+        cbp = CompactBilinearPooling(128, 128, 160)
+        x = torch.rand(4,128).requires_grad_()
+        y = torch.rand(4,128).requires_grad_()
         self.assertTrue(torch.autograd.gradcheck(cbp, (x,y), eps=1))
 
 class TestCompactBilinearDoublePooling(unittest.TestCase):
     def test_pooling(self):
-        mcb = CompactBilinearPooling(2048, 2048, 16000).double().cuda()
+        mcb = CompactBilinearPooling(2048, 2048, 16000).double()
 
         # Create 4 arrays of positive reals
-        x = torch.autograd.Variable(torch.rand(4,2048).double().cuda(), requires_grad=True)
-        y = torch.autograd.Variable(torch.rand(4,2048).double().cuda(), requires_grad=True)
-        z = torch.autograd.Variable(torch.rand(4,2048).double().cuda(), requires_grad=True)
-        w = torch.autograd.Variable(torch.rand(4,2048).double().cuda(), requires_grad=True)
+        x = torch.rand(4,2048).double()
+        y = torch.rand(4,2048).double()
+        z = torch.rand(4,2048).double()
+        w = torch.rand(4,2048).double()
 
         # Compute the real bilinear pooling for each pair of array
-        bp_xy = bilinear_pooling(x,y).data.cpu().numpy()
-        bp_zw = bilinear_pooling(z,w).data.cpu().numpy()
+        bp_xy = bilinear_pooling(x,y).cpu().numpy()
+        bp_zw = bilinear_pooling(z,w).cpu().numpy()
 
         # Compute the dot product of the result
         kernel_bp = np.sum(bp_xy*bp_zw, axis=1)
 
 
         # Repeat the computation with compact bilinear pooling
-        cbp_xy = mcb(x,y).data.cpu().numpy()
-        cbp_zw = mcb(z,w).data.cpu().numpy()
+        cbp_xy = mcb(x,y).cpu().numpy()
+        cbp_zw = mcb(z,w).cpu().numpy()
 
         kernel_cbp = np.sum(cbp_xy*cbp_zw, axis=1)
 
@@ -98,9 +98,9 @@ class TestCompactBilinearDoublePooling(unittest.TestCase):
         np.testing.assert_almost_equal(ratio, np.ones_like(ratio), decimal=1)
 
     def test_gradients(self):
-        cbp = CompactBilinearPooling(128, 128, 160, force_cpu_scatter_add=True).double().cuda()
-        x = torch.autograd.Variable(torch.rand(4,128).double().cuda(), requires_grad=True)
-        y = torch.autograd.Variable(torch.rand(4,128).double().cuda(), requires_grad=True)
+        cbp = CompactBilinearPooling(128, 128, 160).double()
+        x = torch.rand(4,128).double().requires_grad_()
+        y = torch.rand(4,128).double().requires_grad_()
         self.assertTrue(torch.autograd.gradcheck(cbp, (x,y), eps=1))
 
 if __name__ == '__main__':
