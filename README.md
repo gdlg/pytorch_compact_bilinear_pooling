@@ -4,13 +4,19 @@ This repository has a pure Python implementation of Compact Bilinear Pooling and
 
 This version relies on the FFT implementation provided with PyTorch 0.4.0 onward. For older versions of PyTorch, use the tag [v0.3.0](https://github.com/gdlg/pytorch_compact_bilinear_pooling/releases/tag/v0.3.0).
 
+## Installation
+
+Run the `setup.py`, for instance:
+```
+python setup.py install
+```
+
 ## Usage
 
 `class compact_bilinear_pooling.CompactBilinearPooling(input1_size, input2_size, output_size, h1 = None, s1 = None, h2 = None, s2 = None)`
 
 Basic usage:
 ```
-from torch.autograd import Variable
 from compact_bilinear_pooling import CountSketch, CompactBilinearPooling
 
 input_size = 2048
