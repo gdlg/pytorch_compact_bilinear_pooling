@@ -27,10 +27,10 @@ def bilinear_pooling(x,y):
 
 class TestComplexMultiply(unittest.TestCase):
     def test_gradients(self):
-        x = (torch.rand(4,128).requires_grad_(),
-             torch.rand(4,128).requires_grad_())
-        y = (torch.rand(4,128).requires_grad_(),
-             torch.rand(4,128).requires_grad_())
+        x = (torch.rand(4,128).double().requires_grad_(),
+             torch.rand(4,128).double().requires_grad_())
+        y = (torch.rand(4,128).double().requires_grad_(),
+             torch.rand(4,128).double().requires_grad_())
         self.assertTrue(torch.autograd.gradcheck(ComplexMultiply.apply, x+y, eps=1))
 
 class TestCompactBilinearPooling(unittest.TestCase):
@@ -60,13 +60,8 @@ class TestCompactBilinearPooling(unittest.TestCase):
         # The ratio between the two dot product should be close to one.
         ratio = kernel_cbp / kernel_bp
 
-        np.testing.assert_almost_equal(ratio, np.ones_like(ratio), decimal=1)
-        
-    def test_gradients(self):
-        cbp = CompactBilinearPooling(128, 128, 160)
-        x = torch.rand(4,128).requires_grad_()
-        y = torch.rand(4,128).requires_grad_()
-        self.assertTrue(torch.autograd.gradcheck(cbp, (x,y), eps=1))
+        np.testing.assert_almost_equal(ratio, np.ones_like(ratio), decimal=1)       
+
 
 class TestCompactBilinearDoublePooling(unittest.TestCase):
     def test_pooling(self):
@@ -101,7 +96,7 @@ class TestCompactBilinearDoublePooling(unittest.TestCase):
         cbp = CompactBilinearPooling(128, 128, 160).double()
         x = torch.rand(4,128).double().requires_grad_()
         y = torch.rand(4,128).double().requires_grad_()
-        self.assertTrue(torch.autograd.gradcheck(cbp, (x,y), eps=1))
+        self.assertTrue(torch.autograd.gradcheck(cbp, (x,y)))
 
 if __name__ == '__main__':
     unittest.main()
